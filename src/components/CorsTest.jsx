@@ -88,7 +88,7 @@ const CorsTest = () => {
         <h3>Debug Information:</h3>
         <ul>
           <li>Current Origin: {window.location.origin}</li>
-          <li>API Base URL: https://visit-ethiopia-backend.vercel.app/api/v1</li>
+                          <li>API Base URL: https://touropia-backend.vercel.app/api/v1</li>
           <li>User Agent: {navigator.userAgent}</li>
         </ul>
       </div>

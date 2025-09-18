@@ -38,6 +38,7 @@ export const AuthProvider = ({ children }) => {
       
       localStorage.setItem('token', newToken);
       localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem('role', userData.role); // Store user role
       
       setToken(newToken);
       setUser(userData);
@@ -81,10 +82,7 @@ export const AuthProvider = ({ children }) => {
 
   const forgotPassword = async (email) => {
     try {
-      console.log('AuthContext: Calling forgotPassword API with email:', email);
-      console.log('AuthContext: API base URL:', authAPI.forgotPassword.toString());
       const response = await authAPI.forgotPassword(email);
-      console.log('AuthContext: ForgotPassword API response:', response.data);
       return { 
         success: true, 
         message: response.data.message || 'Password reset email sent successfully!' 
@@ -103,10 +101,7 @@ export const AuthProvider = ({ children }) => {
 
   const resetPassword = async (token, passwordData) => {
     try {
-      console.log('AuthContext: Calling resetPassword API with token:', token);
-      console.log('AuthContext: Password data:', passwordData);
       const response = await authAPI.resetPassword(token, passwordData);
-      console.log('AuthContext: ResetPassword API response:', response.data);
       return { 
         success: true, 
         message: response.data.message || 'Password reset successfully!' 
@@ -147,7 +142,8 @@ export const AuthProvider = ({ children }) => {
     forgotPassword,
     resetPassword,
     verifyEmail,
-    isAuthenticated: !!token
+    isAuthenticated: !!token,
+    isAdmin: user?.role === 'admin', // Expose isAdmin boolean
   };
 
   return (

@@ -1,2 +1,2 @@
-# visit-ethiopia-frontend
-visit ethiopia website developement frontend side
+# touropia-frontend
+Touropia website development frontend side

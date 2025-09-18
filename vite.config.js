@@ -7,7 +7,7 @@ export default defineConfig({
     port: 5175,
     proxy: {
       '/api/v1': {
-        target: 'https://visit-ethiopia-backend-ku5l.vercel.app',
+        target: 'https://visit-ethiopia-backend-3a56.onrender.com',
         changeOrigin: true,
         secure: true
       }
