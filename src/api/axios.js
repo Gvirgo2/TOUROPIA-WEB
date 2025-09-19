@@ -6,10 +6,13 @@ import axios from "axios";
 const isDev = import.meta.env.DEV;
 const DEV_BASE = "/api/v1";
 const PROD_BASE =
-  import.meta.env.VITE_API_BASE_URL || "https://visit-ethiopia-backend-3a56.onrender.com/api/v1";
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://visit-ethiopia-backend-ku5l.vercel.app/api/v1";
 
 const SELECTED_BASE = isDev ? DEV_BASE : PROD_BASE;
-const normalizedBaseURL = SELECTED_BASE.endsWith("/") ? SELECTED_BASE : SELECTED_BASE + "/";
+const normalizedBaseURL = SELECTED_BASE.endsWith("/")
+  ? SELECTED_BASE
+  : SELECTED_BASE + "/";
 
 const api = axios.create({
   baseURL: normalizedBaseURL,
@@ -24,7 +27,11 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  console.log("Axios Request Interceptor:", { url: config.url, method: config.method, headers: config.headers }); // Add this line
+  console.log("Axios Request Interceptor:", {
+    url: config.url,
+    method: config.method,
+    headers: config.headers,
+  }); // Add this line
   return config;
 });
 
@@ -41,7 +48,8 @@ export const authAPI = {
   logout: () => api.post("/users/logout"),
   // Added endpoints used by AuthContext and routes
   forgotPassword: (email) => api.post("/users/forgotPassword", { email }),
-  resetPassword: (token, data) => api.patch(`/users/resetPassword/${token}`, data),
+  resetPassword: (token, data) =>
+    api.patch(`/users/resetPassword/${token}`, data),
   verifyEmail: (token) => api.get(`/users/verify-email/${token}`),
   getAllUsers: () => api.get("/users"), // Admin only: Get all users
   getUserProfile: () => api.get("/users/profile"),
@@ -90,7 +98,8 @@ export const transportAPI = {
   updateTransport: (id, data) => api.patch(`/transports/${id}`, data), // Admin only
   deleteTransport: (id) => api.delete(`/transports/${id}`), // Admin only
   getTransportReviews: (id) => api.get(`/transports/${id}/reviews`), // Get reviews for a transport
-  createTransportReview: (id, data) => api.post(`/transports/${id}/reviews`, data), // Create a review for a transport
+  createTransportReview: (id, data) =>
+    api.post(`/transports/${id}/reviews`, data), // Create a review for a transport
 };
 
 export const bookingAPI = {
@@ -117,7 +126,7 @@ export const newsAPI = {
   getFeaturedNews: () => api.get("/news/featured"), // New: Get featured news
   updateNews: (id, data) => api.patch(`/news/${id}`, data), // Admin only
   deleteNews: (id) => api.delete(`/news/${id}`), // Admin only
-  getByCategory: (category) => api.get('/news', { params: { category } }),// Get news articles by category - GET /news?category={category}
+  getByCategory: (category) => api.get("/news", { params: { category } }), // Get news articles by category - GET /news?category={category}
 };
 
 export const reviewAPI = {
@@ -128,7 +137,8 @@ export const reviewAPI = {
   getCurrentUserReviews: () => api.get("/reviews/me"), // New: Get current user's reviews
   getPendingReviews: () => api.get("/reviews/pending"), // New: Admin only - Get pending reviews
   approveReview: (id) => api.patch(`/reviews/${id}/approve`), // New: Admin only - Approve a review
-  getAllReviews: (status = 'all') => api.get(`/reviews${status !== 'all' ? `?status=${status}` : ''}`), // New: Admin only - Get all reviews with optional status filter
+  getAllReviews: (status = "all") =>
+    api.get(`/reviews${status !== "all" ? `?status=${status}` : ""}`), // New: Admin only - Get all reviews with optional status filter
 };
 
 export default api;
