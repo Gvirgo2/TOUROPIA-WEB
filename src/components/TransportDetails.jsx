@@ -27,9 +27,8 @@ export default function TransportDetails() {
       setError(null);
       try {
         const res = await transportAPI.getTransportById(carId);
-        // const fetchedTransport = res?.data?.data?.data || res?.data?.data || res?.data;
-        // ✅ correct
-        const fetchedTransport = res?.data?.data || {};
+        const fetchedTransport =
+          res?.data?.data?.data || res?.data?.data || res?.data;
 
         console.log("Fetched transport details:", fetchedTransport);
         if (fetchedTransport) {
