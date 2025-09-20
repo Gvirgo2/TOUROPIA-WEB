@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { transportAPI } from '../../api/axios'; // Adjust path as necessary
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { transportAPI } from "../../api/axios"; // Adjust path as necessary
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
 
 const AdminTransports = () => {
-  console.log('AdminTransports component rendered');
+  console.log("AdminTransports component rendered");
   const [transports, setTransports] = useState([]);
   const [filteredTransports, setFilteredTransports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterType, setFilterType] = useState("");
 
   useEffect(() => {
-    console.log('AdminTransports useEffect triggered for initial fetch.');
+    console.log("AdminTransports useEffect triggered for initial fetch.");
     fetchTransports();
   }, []);
 
@@ -25,16 +25,23 @@ const AdminTransports = () => {
   const fetchTransports = async () => {
     setLoading(true);
     try {
-      console.log('Attempting to fetch all transports...');
+      console.log("Attempting to fetch all transports...");
       const res = await transportAPI.getAllTransports();
-      console.log('API response for all transports:', res);
-      const fetchedTransports = res?.data?.data?.data || res?.data?.data || res?.data || [];
-      console.log('Normalized fetched transports:', fetchedTransports);
-      setTransports(fetchedTransports);
-      setFilteredTransports(fetchedTransports);
+      console.log("API response for all transports:", res);
+      const fetchedTransports =
+        res?.data?.data?.data || res?.data?.data || res?.data || [];
+      console.log("Normalized fetched transports:", fetchedTransports);
+      const normalized = Array.isArray(fetchedTransports)
+        ? fetchedTransports
+        : [fetchedTransports];
+      setTransports(normalized);
+      setFilteredTransports(normalized);
     } catch (err) {
-      console.error('Error fetching transports:', err);
-      const msg = err?.response?.data?.message || err?.message || 'Failed to load transports.';
+      console.error("Error fetching transports:", err);
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Failed to load transports.";
       setError(msg);
       toast.error(msg);
     } finally {
@@ -46,30 +53,39 @@ const AdminTransports = () => {
     let results = [...transports];
 
     if (filterType) {
-      results = results.filter(transport =>
-        transport.type.toLowerCase() === filterType.toLowerCase()
+      results = results.filter(
+        (transport) => transport.type.toLowerCase() === filterType.toLowerCase()
       );
     }
 
     if (searchTerm) {
-      results = results.filter(transport =>
-        (transport.brand || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (transport.model || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (transport.category || '').toLowerCase().includes(searchTerm.toLowerCase())
+      results = results.filter(
+        (transport) =>
+          (transport.brand || "")
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          (transport.model || "")
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          (transport.category || "")
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
       );
     }
     setFilteredTransports(results);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this transport?')) {
+    if (window.confirm("Are you sure you want to delete this transport?")) {
       try {
         await transportAPI.deleteTransport(id);
-        toast.success('Transport deleted successfully!');
+        toast.success("Transport deleted successfully!");
         fetchTransports(); // Re-fetch list to update UI
       } catch (err) {
-        console.error('Error deleting transport:', err);
-        toast.error(err.response?.data?.message || 'Failed to delete transport.');
+        console.error("Error deleting transport:", err);
+        toast.error(
+          err.response?.data?.message || "Failed to delete transport."
+        );
       }
     }
   };
@@ -82,7 +98,10 @@ const AdminTransports = () => {
       <ToastContainer />
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="mb-0">Transport Management</h2>
-        <Link to="/admin/transports/new" className="btn btn-success d-flex align-items-center">
+        <Link
+          to="/admin/transports/new"
+          className="btn btn-success d-flex align-items-center"
+        >
           <i className="bi bi-plus-circle-fill me-2"></i> Add New Transport
         </Link>
       </div>
@@ -134,9 +153,16 @@ const AdminTransports = () => {
                 <tr key={transport._id || transport.id}>
                   <td>
                     <img
-                      src={transport.imageUrl || 'https://via.placeholder.com/50'}
+                      src={
+                        transport.imageUrl || "https://via.placeholder.com/50"
+                      }
                       alt={transport.name}
-                      style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "cover",
+                        borderRadius: "4px",
+                      }}
                     />
                   </td>
                   <td>{transport.brand}</td>
@@ -145,10 +171,18 @@ const AdminTransports = () => {
                   <td>{transport.transmission}</td>
                   <td>${transport.pricePerDay}</td>
                   <td>
-                    <Link to={`/admin/transports/${transport._id || transport.id}`} className="ms-2 action-icon-btn edit-icon-btn">
+                    <Link
+                      to={`/admin/transports/${transport._id || transport.id}`}
+                      className="ms-2 action-icon-btn edit-icon-btn"
+                    >
                       <i className="bi bi-pencil"></i>
                     </Link>
-                    <button onClick={() => handleDelete(transport._id || transport.id)} className="ms-2 action-icon-btn delete-icon-btn">
+                    <button
+                      onClick={() =>
+                        handleDelete(transport._id || transport.id)
+                      }
+                      className="ms-2 action-icon-btn delete-icon-btn"
+                    >
                       <i className="bi bi-trash"></i>
                     </button>
                   </td>
